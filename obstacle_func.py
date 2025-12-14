@@ -126,18 +126,18 @@ def process_step(depth_img, color_img,camera, depth_start_x, depth_end_x, depth_
     return is_obstacle, color_img
 
 
-def process_horizontal_obstacle(depth_img, color_img, camera,y_start,y_end):
+def process_horizontal_obstacle(depth_img, color_img, camera,y_start,y_end,x_start,x_end):
     """
     カメラ画像中央に横長の領域を設定し、距離を測定。
     X軸方向に走査し、「近い距離」かつ「平坦（変化が少ない）」な領域を障害物として検出する。
     """
     if depth_img is None:
-        return "NONE", color_img
+        return False, color_img
     
     h,w = depth_img.shape
     
     # 短冊切り出し
-    strip_data = depth_img[y_start:y_end, :] # 横幅は全域
+    strip_data = depth_img[y_start:y_end, x_start:x_end] # 横幅は全域
     
     # 2. Y軸方向（縦）につぶして、X軸ごとの平均距離を計算
     # 行方向(axis=0)に平均をとる -> 長さwの1次元配列になる
@@ -165,8 +165,10 @@ def process_horizontal_obstacle(depth_img, color_img, camera,y_start,y_end):
     obstacle_count = 0
     start_x = None
     detected_obstacles = [] # (start_x, end_x, avg_dist)
-
-    for x in range(w):
+    
+    strip_width = len(col_means)
+    
+    for x in range(strip_width):
         dist = col_means[x]
         change = diff[x]
         
@@ -181,7 +183,7 @@ def process_horizontal_obstacle(depth_img, color_img, camera,y_start,y_end):
                 # 障害物確定
                 end_x = x
                 avg_d = np.mean(col_means[start_x:end_x])
-                detected_obstacles.append((start_x, end_x, avg_d))
+                detected_obstacles.append((start_x + x_start, end_x + x_start, avg_d))
             
             # リセット
             obstacle_count = 0
@@ -189,11 +191,11 @@ def process_horizontal_obstacle(depth_img, color_img, camera,y_start,y_end):
 
     # 画面右端まで続いていた場合の処理
     if obstacle_count > MIN_WIDTH_PIXELS:
-         detected_obstacles.append((start_x, w, np.mean(col_means[start_x:w])))
+         detected_obstacles.append((start_x + x_start, strip_width + x_start, np.mean(col_means[start_x:strip_width])))
 
     # 5. 結果の描画とステータス返却
     # 解析領域（青枠）
-    cv2.rectangle(color_img, (0, y_start), (w, y_end), (255, 255, 0), 1)
+    cv2.rectangle(color_img, (x_start, y_start), (x_end, y_end), (255, 255, 0), 1)
     
     status = False
     target_center = None

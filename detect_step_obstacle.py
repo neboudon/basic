@@ -100,9 +100,11 @@ def main():
     
     #障害物検出のためのパラメータ
     strip_height = 60
-    #depth_center_y = (depth_h//4)*3
-    y_start = depth_h -  (strip_height)
-    y_end = depth_h
+    depth_center_y = (depth_h//3)*2
+    y_start = depth_center_y -  (strip_height//2)
+    y_end = depth_center_y + (strip_height//2)
+    x_start = 40
+    x_end = depth_w - 40
     
     while True:
         loop_start_time = time.time()
@@ -130,7 +132,7 @@ def main():
                 send_command_flag = False
                 
         if(loop_start_time - last_time_obst) >= INTERVAL_STEP:
-            result, result_img = process_horizontal_obstacle(depth_img,color_img,camera,y_start,y_end)
+            result, result_img = process_horizontal_obstacle(depth_img,color_img,camera,y_start,y_end,x_start,x_end)
             last_time_obst = loop_start_time
             
             if result == True:
