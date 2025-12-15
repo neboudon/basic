@@ -54,6 +54,14 @@ def detect_step_or_obstacle(depth_img, color_img, camera):
         cv2.rectangle(color_img, (sx, 0), (ex, h), color, 1)
         cv2.putText(color_img, name[0], (sx, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, color, 2)
 
+    scan_top = h // 2
+    scan_bottom = h - 40
+    
+    # 上限ライン (ピンク色)
+    cv2.line(color_img, (0, scan_top), (w, scan_top), (255, 0, 255), 1)
+    # 下限ライン (ピンク色)
+    cv2.line(color_img, (0, scan_bottom), (w, scan_bottom), (255, 0, 255), 1)
+    
     # --- 3. 総合判定ロジック ---
     # L=Blocked, C=Blocked, R=Blocked -> 段差 (STEP)
     # L=Clear,   C=Blocked, R=Clear   -> 障害物 (OBSTACLE)
