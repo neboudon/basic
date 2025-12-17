@@ -209,9 +209,9 @@ def main():
             elif obs_status != "SAFE":
                 avoid_flag = True
                 # --- 追加: 状況に応じた方向決定 ---
-                if obs_status == "OBS_LEFT_CENTER":
+                if obs_status == "OBS_LEFT_CENTER" or obs_status == "OBS_LEFT":
                     target_avoid_cmd = "PR\n"       # 左+中は右へ
-                elif obs_status == "OBS_RIGHT_CENTER":
+                elif obs_status == "OBS_RIGHT_CENTER" or obs_status == "OBS_RIGHT":
                     target_avoid_cmd = "PL\n"       # 右+中は左へ
                 elif obs_status == "OBS_CENTER":
                     # --- 追加: 交互動作ロジック ---

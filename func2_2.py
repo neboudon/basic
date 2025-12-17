@@ -251,6 +251,16 @@ def detect_step_or_obstacle(depth_img, color_img, camera):
         cv2.putText(color_img, "OBSTACLE DETECTED", (w//2 - 100, h//2), 
                     cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0, 165, 255), 3)
         return result_type, color_img
+    elif lane_status["LEFT"]:
+        result_type = "OBS_LEFT"
+        cv2.putText(color_img, "OBSTACLE DETECTED", (w//2 - 100, h//2), 
+                    cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0, 165, 255), 3)
+        return result_type,color_img
+    elif lane_status["RIGHT"]:
+        result_type = "OBS_RIGHT"
+        cv2.putText(color_img, "OBSTACLE DETECTED", (w//2 - 100, h//2), 
+                    cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0, 165, 255), 3)
+        return result_type,color_img
     # 左右の壁に近づきすぎた場合 (オプション)
     #elif lane_status["LEFT"] or lane_status["RIGHT"]:
         # ここでは障害物扱いにはしないが、警告を出すなどの処理が可能
