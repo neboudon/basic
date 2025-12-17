@@ -62,6 +62,12 @@ def detect_step_or_obstacle(depth_img, color_img, camera):
     # 下限ライン (ピンク色)
     cv2.line(color_img, (0, scan_bottom), (w, scan_bottom), (255, 0, 255), 1)
     
+    ref_y_start = h - 40
+    ref_y_end = h - 20
+    cv2.line(color_img, (0, ref_y_start), (w, ref_y_start), (255, 255, 0), 1)
+    # 基準領域の下限 (水色)
+    cv2.line(color_img, (0, ref_y_end), (w, ref_y_end), (255, 255, 0), 1)
+    
     # --- 3. 総合判定ロジック ---
     # L=Blocked, C=Blocked, R=Blocked -> 段差 (STEP)
     # L=Clear,   C=Blocked, R=Clear   -> 障害物 (OBSTACLE)
