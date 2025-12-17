@@ -29,7 +29,7 @@ def detect_step_or_obstacle(depth_img, color_img, camera):
     
     # 左、中央、右のX座標範囲 (start_x, end_x)
     lanes = {
-        "LEFT":   ( center_x//2 - lane_width//2, center_x//2 + lane_width),       # 左側
+        "LEFT":   ( center_x//2 - lane_width//2, center_x//2 + lane_width//2),       # 左側
         "CENTER": (center_x - lane_width//2, center_x + lane_width//2), # 中央
         "RIGHT":  ( (center_x//2)*3 - lane_width//2, (center_x//2)*3 + lane_width//2)        # 右側
     }
@@ -54,7 +54,7 @@ def detect_step_or_obstacle(depth_img, color_img, camera):
         cv2.rectangle(color_img, (sx, 0), (ex, h), color, 1)
         cv2.putText(color_img, name[0], (sx, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, color, 2)
 
-    scan_top = h // 2
+    scan_top = (h // 2) - 20
     scan_bottom = h - 40
     
     # 上限ライン (ピンク色)
@@ -121,7 +121,7 @@ def analyze_vertical_strip(depth_img, x_start, x_end, camera):
     
     # 探索範囲の設定
     scan_bottom = h - 40 # 足元 (インデックス大)
-    scan_top = h // 2    # 頭上 (インデックス小)
+    scan_top = (h // 2) - 20    # 頭上 (インデックス小)
     
     # 安全策: 範囲がおかしい場合は即リターン
     if scan_bottom <= scan_top:
